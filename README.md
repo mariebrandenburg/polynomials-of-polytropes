@@ -32,6 +32,6 @@ cat in/3d_data.txt | sage 3d_step1.py | tee out/3d/3d_kleene_stars.txt | sage 3d
 ### Dependencies:
 All scripts are written for Sage (version ), using an interface to Macaulay2 (version ).
 For some of the scripts the normaliz package of sage is needed. To install it, run
-	sage -i pynormaliz
+	``` sage -i pynormaliz ```
 
 Note that you need Macaulay2 to be installed and the M2 command available under in your `PATH` to use the Sage interface to Macaulay2.
