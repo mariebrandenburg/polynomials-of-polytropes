@@ -8,7 +8,7 @@ for line in sys.stdin:
     code = '''
     S = QQ[a12,a13,a14,a21,a23,a24,a25,a31,a32,a34,a41,a42,a43];
     vol = {};
-    f = vol/24;
+    f = vol/6;
     f = diff(a12, diff(a12, f))/12 + diff(a12, f)/2 + f;
     f = diff(a13, diff(a13, f))/12 + diff(a13, f)/2 + f;
     f = diff(a14, diff(a14, f))/12 + diff(a14, f)/2 + f;

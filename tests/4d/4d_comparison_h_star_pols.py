@@ -54,20 +54,23 @@ def lattice_polytope(line):
 def get_input(line_number):
     ## manage the jungle of input files
 
-    with open('data') as fp:
+    with open('../../input/4d_data.txt') as fp:
         for i, line in enumerate(fp):
             if i == line_number:
                 coord = line
                 break
 
     line_number_multi = line_number
-    if index < 9999:
-        fname_multi = 'h_star_1_9999'
+    if index < 8000:
+        fname_multi = '../../output/4d/4d_h_star_pols_1_8000.txt'
+    elif index < 15000:
+        fname_multi = '../../output/4d/4d_h_star_pols_8001_15000.txt'
+        line_number_multi -= 8000
     elif index < 20000:
-        fname_multi = 'h_star_10000_19999'
-        line_number_multi -= 9999
+        fname_multi = '../../output/4d/4d_h_star_pols_15001_20000.txt'
+        line_number_multi -= 15000
     else:
-        fname_multi = 'h_star_20000'
+        fname_multi = '../../output/4d/4d_h_star_pols_20001.txt'
         line_number_multi -= 20000
     with open(fname_multi) as fp:
         for i, line in enumerate(fp):
@@ -77,9 +80,9 @@ def get_input(line_number):
     
     line_number_kleene = line_number
     if index < 9999:
-        fname_weight = 'kleene_1_9999'
+        fname_weight = '../../output/4d/4d_kleene_stars_1_9999.txt'
     else:
-        fname_weight = 'kleene_10000'
+        fname_weight = '../../output/4d/4d_kleene_stars_10000.txt'
         line_number_kleene  -= 9999
     with open(fname_weight) as fp:
         for i, line in enumerate(fp):
@@ -102,7 +105,7 @@ def comparison(coord, weight, multi, pipe):
 
     w = [int(x) for x in weight[1:-1].split(',')]
     for index2 in range(len(w)):
-        multi = multi.replace(GENS_STR[index2], str(w[index2]))
+        multi = multi.replace(GENS_STR[index2], '('+str(w[index2])+')')
 
     f = R(multi)
     g = R(univ)
@@ -113,10 +116,13 @@ def comparison(coord, weight, multi, pipe):
 
 MAX_WAITING_TIME = 7 * 60
 CHECK_INTERVAL = 10
+write_mode = 'w'
 ## start computing the comparison for each line
 ## check every CHECK_INTERVAL seconds for a result
 ## kill the process after MAX_WAITING_TIME seconds otherwise
-for index in range(27247):
+
+#for index in range(27247):
+for index in range(19999,20002):
     if not index % 1000:
         print('index',index)
 
@@ -140,6 +146,7 @@ for index in range(27247):
     if p.is_alive():
         p.terminate()
     
-    write_mode = 'w' if index == 0 else 'a'
-    with open("output_comparison_h_star", write_mode) as fp:
-        fp.write(result+'\n')
+    
+    with open("4d_output_comparison_h_star.txt", write_mode) as fp:
+        fp.write(str(index)+"; "+result+"; waiting_time: "+str(waiting_time)+'\n')
+    write_mode="a"

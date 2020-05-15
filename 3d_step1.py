@@ -1,7 +1,9 @@
 import sys
 import numpy as np
 from sage.all import *
-output_file = open("erhart_tests_3d","w")
+
+write_mode = "w"
+
 for line in sys.stdin:
 
     input_data = line.rstrip()
@@ -70,6 +72,6 @@ for line in sys.stdin:
 
     output = '{'+str(w[1:len(w)-1])+'}; '+min_prime
     print(output)
-    output_file.write(str(P.ehrhart_polynomial())+'\n')
-
-output_file.close()
+    with open("tests/3d/3d_ehrhart_test_data.txt",write_mode) as output_file:
+        output_file.write(str(P.ehrhart_polynomial())+'\n')
+    write_mode = "a"

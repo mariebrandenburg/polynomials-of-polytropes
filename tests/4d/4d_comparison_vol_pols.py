@@ -25,8 +25,10 @@ def lattice_polytope(line):
                 numbers.append([int(number)])
         data_rat.append(numbers)
 
-
-    multiple = np.lcm.reduce(denominators)
+    if len(denominators)>0:
+        multiple = np.lcm.reduce(denominators)
+    else:
+        multiple = 1
     data_int = []
 
     #convert to integer matrix
@@ -43,34 +45,62 @@ def lattice_polytope(line):
 
 
 
-input_file_multi_vol_1_9999  = open("vol_pols_1_9999","r")
-input_file_multi_vol_10000  = open("vol_pols_10000","r")
-input_file_kleene_1_9999  = open("kleene_1_9999","r")
-input_file_kleene_10000  = open("kleene_10000","r")
-input_file_coords = open("data")
-output_file_vols = open("output_comparison_vol", "w")
+def get_input(line_number):
+    ## manage the jungle of input files
+
+    with open('../../input/4d_data.txt') as fp:
+        for i, line in enumerate(fp):
+            if i == line_number:
+                coord = line
+                break
+
+    line_number_multi = line_number
+    if index < 9999:
+        fname_multi = '../../output/4d/4d_vol_pols_1_9999.txt'
+    else:
+        fname_multi = '../../output/4d/4d_vol_pols_10000.txt'
+        line_number_multi -= 9999
+    with open(fname_multi) as fp:
+        for i, line in enumerate(fp):
+            if i == line_number_multi:
+                multi = line
+                break
+    
+    line_number_kleene = line_number
+    if index < 9999:
+        fname_weight = '../../output/4d/4d_kleene_stars_1_9999.txt'
+    else:
+        fname_weight = '../../output/4d/4d_kleene_stars_10000.txt'
+        line_number_kleene  -= 9999
+    with open(fname_weight) as fp:
+        for i, line in enumerate(fp):
+            if i == line_number_kleene:
+                weight = line.split(';')[0]
+                break
+
+    return coord, multi, weight
 
 
-coords = input_file_coords.readlines()
-multi_vol = input_file_multi_vol_1_9999.readlines()+input_file_multi_vol_10000.readlines()
-weights = [line.split(';')[0] for line in input_file_kleene_1_9999.readlines()] + [line.split(';')[0] for line in input_file_kleene_10000.readlines()]
 
-R = PolynomialRing(QQ, ','.join(['a'+str(i)+str(j) for i in range(1,6) for j in range(1,6) if not i==j]+['t']))
+R = PolynomialRing(QQ, ','.join(['a'+str(i)+str(j) for i in range(1,6) for j in range(1,6) if not i==j]))
 
 
-for index in range(len(multi_vol)):
+for index in range(27247):
+#for index in range(9997,10003):
     if index % 500 == 0:
         print(index)
-    f = R(multi_vol[index])
-    P = lattice_polytope(coords[index])
+    coord, multi, weight = get_input(index)
+    f = R(multi)
+    P = lattice_polytope(coord)
     Vol = 24 * P.affine_hull().volume()
-    w = [int(x) for x in weights[index][1:-1].split(',')]+[1]
-    output_file_vols.write(str(Vol==f(w))+'\n')
+    w = [int(x) for x in weight[1:-1].split(',')]
+
+    if index == 0:
+        mode = 'w'
+    else:
+        mode = "a"
+    with open("4d_output_comparison_vol_test.txt", mode) as output_file_vols:
+        output_file_vols.write(str(Vol==f(w))+'\n')
     
 
-input_file_multi_vol_1_9999.close()
-input_file_multi_vol_10000.close()
-input_file_kleene_1_9999.close()
-input_file_kleene_10000.close()
-input_file_coords.close()
-output_file_vols.close()
+

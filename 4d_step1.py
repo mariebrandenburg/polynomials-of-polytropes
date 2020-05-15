@@ -1,7 +1,9 @@
 import sys
 import numpy as np
 from sage.all import *
-output_file = open("out/erhart_tests_1_9999","w")
+
+write_mode = "w"
+
 for line in sys.stdin:
 
     input_data = line.rstrip()
@@ -27,8 +29,10 @@ for line in sys.stdin:
                 numbers.append([int(number)])
         data_rat.append(numbers)
 
-
-    multiple = np.lcm.reduce(denominators)
+    if len(denominators)>0:
+        multiple = np.lcm.reduce(denominators)
+    else:
+        multiple=1
     data_int = []
 
     #convert to integer matrix
@@ -69,4 +73,7 @@ for line in sys.stdin:
 
     output = '{'+str(w[1:len(w)-1])+'}; '+min_prime
     print(output)
-    output_file.write(str(P.ehrhart_polynomial())+'\n')
+
+    with open("tests/4d/4d_ehrhart_test_data.txt",write_mode) as output_file:
+        output_file.write(str(P.ehrhart_polynomial())+'\n')
+    write_mode = "a"

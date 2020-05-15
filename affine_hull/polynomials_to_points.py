@@ -1,8 +1,8 @@
 from sage.all import *
 
-#file1 = open("polynomials/result_step2_1_9999.txt","r")
-file2 = open("volume_polys_from_10000.txt","r")
-file3 = open("output_vectors","w")
+#file1 = open("../output/4d/4d_vol_pols_1_9999.txt","r")
+file2 = open("../output/4d/4d_vol_pols_10000.txt","r")
+file3 = open("output_vectors_10000.txt","w")
 
 R = PolynomialRing(QQ,['a'+str(i)+str(j) for i in range(1,6) for j in range(1,6) if not i==j])
 a12,a13, a14, a15, a21, a23, a24, a25, a31, a32, a34, a35, a41, a42, a43, a45, a51, a52, a53, a54 = R.gens()
@@ -24,3 +24,7 @@ for line in file2.readlines():
     count += 1
     if count % 100 == 0:
         print(count)
+
+#file1.close()
+file2.close()
+file3.close()
