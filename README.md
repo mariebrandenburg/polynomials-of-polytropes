@@ -27,7 +27,9 @@ data.txt: classical vertices (pseudovertices) of polytropes. Each line contains 
 
 ### Example run (d=3):
 Compute all volume, Ehrhart and h\*-polynomials for d=3 at once:
+```
 cat in/3d_data.txt | sage 3d_step1.py | tee out/3d/3d_kleene_stars.txt | sage 3d_step2.py | tee out/3d/3d_vol_pols.txt | sage 3d_step3.py | tee out/3d/3d_ehr_pols.txt | sage 3d_step4.py > out/3d/3d_h_star_pols.txt
+```
 
 ### Dependencies:
 All scripts are written for Sage (version ), using an interface to Macaulay2 (version ).
