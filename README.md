@@ -38,4 +38,4 @@ For some of the scripts the normaliz package of sage is needed. To install it, r
 sage -i pynormaliz 
 ```
 
-Note that you need Macaulay2 to be installed and the M2 command available under in your `PATH` to use the Sage interface to Macaulay2.
+Note that you need Macaulay2 to be installed and the M2 command available in your `PATH` to use the Sage interface to Macaulay2.
