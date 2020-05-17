@@ -114,39 +114,41 @@ def comparison(coord, weight, multi, pipe):
 
 
 
-MAX_WAITING_TIME = 7 * 60
+MAX_WAITING_TIME = 3 * 60
 CHECK_INTERVAL = 10
 write_mode = 'w'
 ## start computing the comparison for each line
 ## check every CHECK_INTERVAL seconds for a result
 ## kill the process after MAX_WAITING_TIME seconds otherwise
+prev_indices = []
+while len(prev_indices)<27248:
+#for index in range(19999,20002):
+    index = ZZ.random_element(0,27248)
+    if not index in prev_indices:
+        prev_indices.append(index)
+        recv_end, send_end = multiprocessing.Pipe(False)
+        coord, multi, weight = get_input(index)
+        p = multiprocessing.Process(
+            target=comparison,
+            args=(coord, weight, multi, send_end)
+        )
+        p.start()
 
-#for index in range(27247):
-for index in range(19999,20002):
-    if not index % 1000:
-        print('index',index)
+        waiting_time = 0
+        result = '?'
+        while(waiting_time < MAX_WAITING_TIME):
+            if recv_end.poll(CHECK_INTERVAL):
+                result = str(recv_end.recv())
+                p.join()
+                break
+            waiting_time += CHECK_INTERVAL
 
-    recv_end, send_end = multiprocessing.Pipe(False)
-    coord, multi, weight = get_input(index)
-    p = multiprocessing.Process(
-        target=comparison, 
-        args=(coord, weight, multi, send_end)
-    )
-    p.start()
+        if p.is_alive():
+            p.terminate()
 
-    waiting_time = 0
-    result = '?'
-    while(waiting_time < MAX_WAITING_TIME):
-        if recv_end.poll(CHECK_INTERVAL):
-            result = str(recv_end.recv())
-            p.join()
-            break
-        waiting_time += CHECK_INTERVAL
+        with open("4d_output_comparison_h_star_rand.txt", write_mode) as fp:
+            fp.write(str(index)+"; "+result+"; waiting_time: "+str(waiting_time)+'\n')
+        write_mode="a"
 
-    if p.is_alive():
-        p.terminate()
-    
-    
-    with open("4d_output_comparison_h_star.txt", write_mode) as fp:
-        fp.write(str(index)+"; "+result+"; waiting_time: "+str(waiting_time)+'\n')
-    write_mode="a"
+    else:
+        continue
