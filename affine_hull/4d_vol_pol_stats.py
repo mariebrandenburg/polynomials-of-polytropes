@@ -93,6 +93,42 @@ print(np.unique(coefficient1)); # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 print(np.unique(coefficient2)); #[0, 1, 2, 3, 4, 5, 6]
 print(np.unique(coefficient3)); #[0, 1, 2]
 
+# compare triangulations data to exp1111:
+triangulations_file = open("4d_polytrope_triangulations.txt", "r");
+output_file = open("triangulations_vectors.txt", "w");
+count = 0;
+index_vector = [0] * 20;
+exponent_vector = [0] * 4845;
+while True:
+	line = triangulations_file.readline();
+	if not line:
+		break;	
+	if line[:3]=='end':
+		count +=1;
+		if count%1000==0: print(count);
+		output_file.write(str(exponent_vector) + "\n");
+		exponent_vector = [0] * 4845;
+		line = line[3:];
+	index_vector = [0] * 20;
+	line = line[1:-5];
+	vertices = line.split(" ");
+	for vertex in vertices:
+		index_vector[19-int(vertex)]=1;
+	M_index = M.index(index_vector);
+	exponent_vector[exp_1111.index(M_index)] = 24;
+simplices_file = open("triangulations_vectors.txt", 'r'); # I just pasted together a couple of scripts I ran, sorry for being lazy
+volpol_file = open("exp1111.txt", 'r');
+count = 0;
+while True:
+	count+=1;
+	simplices_vector = simplices_file.readline();
+	volpol_vector = volpol_file.readline();
+	if not simplices_vector:
+		break;
+	simplices_vector = simplices_vector.replace(",", "");
+	simplices_vector = simplices_vector.replace("[", "");
+	simplices_vector = simplices_vector.replace("]", "");
+	print(count, ": ",simplices_vector==volpol_vector); #all True
 
 #raw data about coefficients and counts
 for i in range(100):
