@@ -5,7 +5,7 @@
 
 ### Scripts:
 - `step1.py`: Computes the Kleene star, converts it to a weight vector and computes a minimal prime
-- `step2.py`: Applies [Alg. ] to compute the multivariate volume polynomial
+- `step2.py`: Applies [[DLS03, Alg. 1]](https://arxiv.org/abs/math/0104286) given a weight vector to compute the multivariate volume polynomial
 - `step3.py`: Applies the Todd operator to the volume polynomial to compute the Ehrhart polynomial
 - `step4.py`: Computes the h\*-polynomial from the Ehrhart polynomial using Eulerian polynomials
 
